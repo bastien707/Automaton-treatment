@@ -5,7 +5,7 @@ public class State {
     private boolean isTerminal; // 0 = not terminal, 1 = terminal
     private boolean isInitial; // 0 = not initial, 1 = initial
 
-    public State(int index, boolean isInitial, boolean isTerminal) {
+    public State(final int index, boolean isInitial, boolean isTerminal) {
         this.index = index;
         this.isInitial = isInitial;
         this.isTerminal = isTerminal;
@@ -17,8 +17,31 @@ public class State {
 
     @Override
     public String toString() {
-        return "index : "+ index +"| isInitial : "+isInitial+"| isTerminal :"+isTerminal;
+        return "index : "+ index +"| isInitial : "+isInitial+"| isTerminal :"+isTerminal+"\n";
     }
+
+    //setters
+    public void setIsInitial(boolean newBool) {
+        this.isInitial = newBool;
+    }
+
+    public void setIsTerminal(boolean newBool) {
+        this.isTerminal = newBool;
+    }
+
+    //getters
+    public int getIndex() {
+        return index;
+    }
+
+    public boolean getIsInitial(){
+        return isInitial;
+    }
+
+    public boolean getIsTerminal(){
+        return isTerminal;
+    }
+
     public static void main(String argvs[]){
         State state1 = new State(0,true,false);
         state1.printState();
