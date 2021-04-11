@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Automaton {
     private int symbol; // nbr of symbols, e.g if equal 3 -> a,b,c
@@ -47,6 +48,10 @@ public class Automaton {
             // stateList.get(0).setIsTerminal(true);
         }
     }
+    public void setTransitionNumber(String line) {
+        this.transitionNumber = Integer.parseInt(line);
+    }
+
 
     // getters
     public int getSymbol() {
@@ -59,6 +64,10 @@ public class Automaton {
 
     public ArrayList<State> getStateList() {
         return this.stateList;
+    }
+
+    public int getTransitionNumber(){
+        return this.transitionNumber;
     }
 
     // methods
@@ -85,12 +94,18 @@ public class Automaton {
             for (int i = 2; i <= array.length; i += 2) { // we skip the odd cells that are space char. and start at i=2
                                                          // because it's the first final state
                 int numState = Character.getNumericValue(array[i]); // we recover the int in the array
-                getStateList().get(numState).setIsTerminal(true);; // the int is the index of the state, so we change his
+                getStateList().get(numState).setIsTerminal(true); // the int is the index of the state, so we change his
                                                                  // state.
             }
         } else {
             System.out.print("There is no initial state !");
         }
+    }
+
+    public void displayAutomate(){
+        System.out.println(this.symbol + "\n" + this.stateNumber);
+        System.out.println(this.stateList);
+        System.out.println(this.transitionNumber);
     }
 
     public void readFile(String filename) { // read an autotmaton text file
@@ -113,7 +128,7 @@ public class Automaton {
                     implementFs(line);
                 }
                 if (lineIndex == 4) {
-                    implementFs(line);
+                    setTransitionNumber(line);
                 }
                 lineIndex++;
             }
@@ -126,7 +141,6 @@ public class Automaton {
     public static void main(String argvs[]) {
         Automaton myAutomaton = new Automaton();
         myAutomaton.readFile("/home/bastien/Efrei/Automaton-treatment/Text/automate1.txt");
-        System.out.println(myAutomaton.getSymbol() + "\n" + myAutomaton.getStateNumber());
-        System.out.println(myAutomaton.getStateList());
+        myAutomaton.displayAutomate();
     }
 }
