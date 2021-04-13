@@ -108,7 +108,7 @@ public class Automaton {
         System.out.println(this.transitionNumber);
     }
 
-    public void readFile(String filename) { // read an autotmaton text file
+    public void readFile(String filename) { // read an automaton text file
         try {
             Scanner scanner = new Scanner(new File(filename)); // recover file
             int lineIndex = 0;
@@ -140,7 +140,7 @@ public class Automaton {
 
     public static void main(String argvs[]) {
         Automaton myAutomaton = new Automaton();
-        myAutomaton.readFile("/home/bastien/Efrei/Automaton-treatment/Text/automate1.txt");
+        myAutomaton.readFile("text/automate1.txt");
         myAutomaton.displayAutomate();
     }
 }
