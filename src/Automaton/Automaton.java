@@ -45,11 +45,15 @@ public class Automaton {
         for (int i = 0; i < stateNumber; i++) {
             State state = new State(i, false, false);
             stateList.add(i, state);
-            // stateList.get(0).setIsTerminal(true);
         }
     }
+
     public void setTransitionNumber(String line) {
         this.transitionNumber = Integer.parseInt(line);
+    }
+
+    public void setTransitionList() {
+        transitionList = new ArrayList<>();
     }
 
 
@@ -68,6 +72,10 @@ public class Automaton {
 
     public int getTransitionNumber(){
         return this.transitionNumber;
+    }
+
+    public ArrayList<Transition> getTransitionList() {
+        return this.transitionList;
     }
 
     // methods
@@ -98,14 +106,26 @@ public class Automaton {
                                                                  // state.
             }
         } else {
-            System.out.print("There is no initial state !");
+            System.out.print("There is no final state !");
         }
+    }
+
+    public void implementTransition(String line){
+        char[] array = line.toCharArray();
+        
+        //recover char value into int. entryS and arrivalS are the index of Entry en Arrival states
+        int entryS= Character.getNumericValue(array[0]);
+        int arrivalS = Character.getNumericValue(array[2]);
+
+        Transition newTransition = new Transition(getStateList().get(entryS), array[1], getStateList().get(arrivalS));
+        transitionList.add(newTransition);
     }
 
     public void displayAutomate(){
         System.out.println(this.symbol + "\n" + this.stateNumber);
         System.out.println(this.stateList);
         System.out.println(this.transitionNumber);
+        System.out.println(this.transitionList);
     }
 
     public void readFile(String filename) { // read an automaton text file
@@ -129,6 +149,10 @@ public class Automaton {
                 }
                 if (lineIndex == 4) {
                     setTransitionNumber(line);
+                    setTransitionList(); // so we create a new transition list (that is empty)
+                }
+                if (lineIndex >= 5) {
+                    implementTransition(line);
                 }
                 lineIndex++;
             }
