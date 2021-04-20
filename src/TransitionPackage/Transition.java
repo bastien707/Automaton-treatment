@@ -8,7 +8,7 @@ public class Transition {
     private State ArrivalState; //final State
     char letter; //transition letter
 
-    public Transition(final State EntryState, final char letter, final State ArrivalState){
+    public Transition(State EntryState, char letter, State ArrivalState){
         this.EntryState = EntryState;
         this.letter = letter;
         this.ArrivalState = ArrivalState;
