@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Automaton {
     private int symbol; // nbr of symbols, e.g if equal 3 -> a,b,c
@@ -269,7 +268,7 @@ public class Automaton {
 
     public static void main(String argvs[]) {
         Automaton myAutomaton = new Automaton();
-        myAutomaton.readFile("text/automate1.txt");
+        myAutomaton.readFile("text/automaton1.txt");
         myAutomaton.displayTransitionTable();
     }
 }
