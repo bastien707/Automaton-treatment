@@ -33,7 +33,9 @@ public class Automaton {
 
     // setters
     public void setSymbol(String line) {
-        this.symbol = Integer.parseInt(line);
+        if (Integer.parseInt(line) <= 26) { // check if in the alphabet (a->z)
+            this.symbol = Integer.parseInt(line);
+        }
     }
 
     public void setStateNumber(String line) {
@@ -57,7 +59,6 @@ public class Automaton {
         transitionList = new ArrayList<>();
     }
 
-
     // getters
     public int getSymbol() {
         return this.symbol;
@@ -71,7 +72,7 @@ public class Automaton {
         return this.stateList;
     }
 
-    public int getTransitionNumber(){
+    public int getTransitionNumber() {
         return this.transitionNumber;
     }
 
@@ -79,18 +80,41 @@ public class Automaton {
         return this.transitionList;
     }
 
+    public ArrayList<State> getInitialStates() {
+        ArrayList<State> InitialStatesList = new ArrayList<>();
+        for (int i = 0; i < this.stateList.size(); i++) {
+            if (this.stateList.get(i).getIsInitial() == true) {
+                InitialStatesList.add(this.stateList.get(i));
+            }
+        }
+        return InitialStatesList;
+    }
+
+    public ArrayList<State> getFinalStates() {
+        ArrayList<State> FinalStatesList = new ArrayList<>();
+        for (int i = 0; i < this.stateList.size(); i++) {
+            if (this.stateList.get(i).getIsTerminal() == true) {
+                FinalStatesList.add(this.stateList.get(i));
+            }
+        }
+        return FinalStatesList;
+    }
+
     // methods
 
     public void implementIs(String line) {
         char[] array = line.toCharArray();
         int numOfIs = Character.getNumericValue(array[0]); // number of initial states
-        if (numOfIs > 0) {
+        if (numOfIs >= 2) {
             for (int i = 2; i <= array.length; i += 2) { // we skip the odd char that are space char. and start at i=2
                                                          // because it's the first initial state
                 int numState = Character.getNumericValue(array[i]); // we recover the int in the array
-                getStateList().get(numState).setIsInitial(true); // the int is the index of the state, so we change his
-                                                                 // state.
+                stateList.get(numState).setIsInitial(true); // the int is the index of the state, so we change his
+                                                            // state.
             }
+        } else if (numOfIs == 1) {
+            int numState = Character.getNumericValue(array[2]); // we recover the int in the array
+            getStateList().get(numState).setIsInitial(true);
         } else {
             System.out.print("There is no initial state !");
         }
@@ -104,30 +128,108 @@ public class Automaton {
                                                          // because it's the first final state
                 int numState = Character.getNumericValue(array[i]); // we recover the int in the array
                 getStateList().get(numState).setIsTerminal(true); // the int is the index of the state, so we change his
-                                                                 // state.
+                                                                  // state.
             }
+        } else if (numOfFs == 1) {
+            int numState = Character.getNumericValue(array[2]); // we recover the int in the array
+            getStateList().get(numState).setIsTerminal(true);
         } else {
-            System.out.print("There is no final state !");
+            System.out.println("There is no final state !");
         }
     }
 
-    public void implementTransition(String line){
+    public void implementTransition(String line) {
         char[] array = line.toCharArray();
-        
-        //recover char value into int. entryS and arrivalS are the index of Entry en Arrival states
-        int entryS= Character.getNumericValue(array[0]);
+
+        // recover char value into int. entryS and arrivalS are the index of Entry en
+        int entryS = Character.getNumericValue(array[0]);
         int arrivalS = Character.getNumericValue(array[2]);
 
         Transition newTransition = new Transition(getStateList().get(entryS), array[1], getStateList().get(arrivalS));
         transitionList.add(newTransition);
-        stateList.get(entryS).getItsTransitions().add(newTransition); //we implement at the same time itsTransitions list of every state
+        stateList.get(entryS).getItsTransitions().add(newTransition); // we implement at the same time itsTransitions
+                                                                      // list of every state
     }
 
-    public void displayAutomate(){
+    // display
+
+    public void rawDisplay() {
         System.out.println(this.symbol + "\n" + this.stateNumber);
         System.out.println(this.stateList);
         System.out.println(this.transitionNumber);
         System.out.println(this.transitionList);
+    }
+
+    public void displayAutomaton() {
+        if (this.getInitialStates().size() > 0) {
+            System.out.print("Initial states : ");
+            for (int i = 0; i < this.getInitialStates().size(); i++) {
+                System.out.print("(" + this.getInitialStates().get(i).getIndex() + ")");
+            }
+            System.out.println();
+        } else {
+            System.out.println("There is not initial states.");
+        }
+
+        if (this.getFinalStates().size() > 0) {
+            System.out.print("Final states : ");
+            for (int i = 0; i < this.getFinalStates().size(); i++) {
+                System.out.print("(" + this.getFinalStates().get(i).getIndex() + ")");
+            }
+            System.out.println();
+        } else {
+            System.out.println("There is not final states.");
+        }
+    }
+
+    public void displayTransitionTable() {
+        System.out.print("Automaton");
+        for (char i = 97; i < (this.symbol) + 97; i++) {
+            System.out.print("    |    " + i); // we print all letters.
+        }
+        System.out.print("    |");
+        System.out.println();
+
+        for (int i = 0; i < this.stateList.size(); i++) { // print state by state and line by line
+            System.out.print(this.stateList.get(i).getIndex() + "            |");
+
+            for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
+                int count = 0;
+                for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) { // we check for each
+                                                                                             // itsTransition if the
+                                                                                             // letters match with the
+                                                                                             // current symbol
+                    if (this.stateList.get(i).getItsTransitions().get(k).getLetter() == j) {
+                        count++;
+                        if (count >= 2) {
+                            System.out.print(",");
+                        }
+                        System.out.print(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex());
+
+                    }
+                }
+                switch (count) { // for a dynamic display
+                case 0:
+                    System.out.print(" ".repeat(9) + "|");
+                    break;
+                case 1:
+                    System.out.print(" ".repeat(8) + "|");
+                    break;
+                case 2:
+                    System.out.print(" ".repeat(6) + "|");
+                    break;
+                case 3:
+                    System.out.print(" ".repeat(4) + "|");
+                    break;
+                case 4:
+                    System.out.print(" ".repeat(5) + "|");
+                    break;
+                }
+
+                count = 0;
+            }
+            System.out.println();
+        }
     }
 
     public void readFile(String filename) { // read an automaton text file
@@ -147,14 +249,15 @@ public class Automaton {
                     implementIs(line); // implement initial States
                 }
                 if (lineIndex == 3) {
-                    implementFs(line); //implement Final states
+                    implementFs(line); // implement Final states
                 }
                 if (lineIndex == 4) {
                     setTransitionNumber(line);
                     setTransitionList(); // so we create a new transition list (that is empty)
                 }
                 if (lineIndex >= 5) {
-                    implementTransition(line); //implement transition and List of Transitions from a State (itsTransitions)
+                    implementTransition(line); // implement transition and List of Transitions from a State
+                                               // (itsTransitions)
                 }
                 lineIndex++;
             }
@@ -167,7 +270,6 @@ public class Automaton {
     public static void main(String argvs[]) {
         Automaton myAutomaton = new Automaton();
         myAutomaton.readFile("text/automate1.txt");
-        myAutomaton.displayAutomate();
-        //System.out.println(myAutomaton.stateList.get(0).getItsTransitions().get(0).getEntryState().getItsTransitions().get(1).getArrivalState());
+        myAutomaton.displayTransitionTable();
     }
 }
