@@ -1,6 +1,7 @@
 package TransitionPackage;
 
 import StatePackage.*;
+import java.util.ArrayList;
 
 public class Transition {
     private State EntryState; //initial State
@@ -34,8 +35,9 @@ public class Transition {
     }
 
     public static void main(String[] args) {
-        State Es = new State(0,true,false);
-        State Fs = new State(1,false,true);
+        ArrayList<Transition> ItsTransitions = new ArrayList<>();
+        State Es = new State(0,true,false,ItsTransitions);
+        State Fs = new State(1,false,true, ItsTransitions);
         Transition t1 = new Transition(Es,'a',Fs);
         System.out.println(t1);
     }

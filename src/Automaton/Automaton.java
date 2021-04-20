@@ -43,7 +43,8 @@ public class Automaton {
     public void setStateList(int stateNumber) {
         stateList = new ArrayList<>();
         for (int i = 0; i < stateNumber; i++) {
-            State state = new State(i, false, false);
+            ArrayList<Transition> ItsTransitions = new ArrayList<>();
+            State state = new State(i, false, false, ItsTransitions); // create a state with its index
             stateList.add(i, state);
         }
     }
@@ -119,6 +120,7 @@ public class Automaton {
 
         Transition newTransition = new Transition(getStateList().get(entryS), array[1], getStateList().get(arrivalS));
         transitionList.add(newTransition);
+        stateList.get(entryS).getItsTransitions().add(newTransition); //we implement at the same time itsTransitions list of every state
     }
 
     public void displayAutomate(){
@@ -142,17 +144,17 @@ public class Automaton {
                     setStateList(getStateNumber()); // create all states with default value false.
                 }
                 if (lineIndex == 2) {
-                    implementIs(line);
+                    implementIs(line); // implement initial States
                 }
                 if (lineIndex == 3) {
-                    implementFs(line);
+                    implementFs(line); //implement Final states
                 }
                 if (lineIndex == 4) {
                     setTransitionNumber(line);
                     setTransitionList(); // so we create a new transition list (that is empty)
                 }
                 if (lineIndex >= 5) {
-                    implementTransition(line);
+                    implementTransition(line); //implement transition and List of Transitions from a State (itsTransitions)
                 }
                 lineIndex++;
             }
@@ -166,5 +168,6 @@ public class Automaton {
         Automaton myAutomaton = new Automaton();
         myAutomaton.readFile("text/automate1.txt");
         myAutomaton.displayAutomate();
+        //System.out.println(myAutomaton.stateList.get(0).getItsTransitions().get(0).getEntryState().getItsTransitions().get(1).getArrivalState());
     }
 }
