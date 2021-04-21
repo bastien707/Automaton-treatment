@@ -101,6 +101,11 @@ public class Automaton {
 
     // methods
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
     public void implementIs(String line) {
         char[] array = line.toCharArray();
         int numOfIs = Character.getNumericValue(array[0]); // number of initial states
@@ -215,7 +220,7 @@ public class Automaton {
 
     public void displayAutomaton() {
         if (this.getInitialStates().size() > 0) {
-            System.out.print("Initial states : ");
+            System.out.print(ANSI_GREEN + "Initial states : "+ ANSI_RESET);
             for (int i = 0; i < this.getInitialStates().size(); i++) {
                 System.out.print("(" + this.getInitialStates().get(i).getIndex() + ")");
             }
@@ -225,7 +230,7 @@ public class Automaton {
         }
 
         if (this.getFinalStates().size() > 0) {
-            System.out.print("Final states : ");
+            System.out.print(ANSI_RED + "Final states : " + ANSI_RESET);
             for (int i = 0; i < this.getFinalStates().size(); i++) {
                 System.out.print("(" + this.getFinalStates().get(i).getIndex() + ")");
             }
@@ -233,9 +238,11 @@ public class Automaton {
         } else {
             System.out.println("There is not final states.");
         }
+        displayTransitionTable();
     }
 
     public void displayTransitionTable() {
+        System.out.println();
         System.out.print("Automaton");
         for (char i = 97; i < (this.symbol) + 97; i++) {
             System.out.print("    |    " + i); // we print all letters.
@@ -244,8 +251,18 @@ public class Automaton {
         System.out.println();
 
         for (int i = 0; i < this.stateList.size(); i++) { // print state by state and line by line
-            System.out.print(this.stateList.get(i).getIndex() + "            |");
-
+            if(this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true){
+                System.out.print(ANSI_YELLOW+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
+            }
+            else if(this.stateList.get(i).getIsInitial() == true){
+                System.out.print(ANSI_GREEN+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
+            }
+            else if(this.stateList.get(i).getIsTerminal() == true){
+                System.out.print(ANSI_RED+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
+            }
+            else{
+                System.out.print(this.stateList.get(i).getIndex() + "            |");
+            }
             for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
                 int count = 0;
                 for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) { // we check for each
@@ -286,6 +303,7 @@ public class Automaton {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public void readFile(String filename) { // read an automaton text file
