@@ -139,15 +139,69 @@ public class Automaton {
 
     public void implementTransition(String line) {
         char[] array = line.toCharArray();
-
-        // recover char value into int. entryS and arrivalS are the index of Entry en
+    
+        // recover char value into int. entryS and arrivalS are the index of Entry
         int entryS = Character.getNumericValue(array[0]);
         int arrivalS = Character.getNumericValue(array[2]);
-
+        
         Transition newTransition = new Transition(getStateList().get(entryS), array[1], getStateList().get(arrivalS));
         transitionList.add(newTransition);
         stateList.get(entryS).getItsTransitions().add(newTransition); // we implement at the same time itsTransitions
                                                                       // list of every state
+    }
+
+    public boolean isAsynchronous() { // check if an automaton is asynchronous
+        int count = 0;
+        for (int i = 0; i < this.transitionList.size(); i++) {
+            if (this.transitionList.get(i).getLetter() == '*') {
+                break;
+            } else {
+                count++;
+            }
+        }
+        if (count == this.transitionList.size()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isDeterminist() {
+        if (this.getInitialStates().size() == 1) {
+            for (int i = 0; i < this.stateList.size(); i++) {
+                for (char j = 97; j < this.symbol + 97; j++) {
+                    int count = 0;
+                    for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) {
+                        if (j == this.stateList.get(i).getItsTransitions().get(k).getLetter()) {
+                            count++;
+                        }
+                        if (count > 1) { // if we have more than 1 transition that goes to 2 differents states
+                            return false;
+                        }
+
+                    }
+
+                }
+            }
+
+        } else if (this.getInitialStates().size() > 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isComplete(){
+        if(this.isDeterminist() == true){
+            if(this.symbol*this.stateNumber == this.transitionList.size()){ 
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
 
     // display
@@ -200,16 +254,19 @@ public class Automaton {
                                                                                              // current symbol
                     if (this.stateList.get(i).getItsTransitions().get(k).getLetter() == j) {
                         count++;
-                        if (count >= 2) {
+                        if (count >= 2) { // display "," to separate each state.
                             System.out.print(",");
                         }
                         System.out.print(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex());
-
                     }
+                }
+                if (count == 0) {
+                    System.out.print("-");
+                    count = 1;
                 }
                 switch (count) { // for a dynamic display
                 case 0:
-                    System.out.print(" ".repeat(9) + "|");
+                    System.out.print(" ".repeat(9) + "|"); // repeat 9 times a space " "
                     break;
                 case 1:
                     System.out.print(" ".repeat(8) + "|");
