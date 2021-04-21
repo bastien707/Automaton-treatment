@@ -39,7 +39,6 @@ public abstract class RunAutomaton {
 
         default:
             System.out.print("An error occured with the choice :/");
-            textfile = "text/automaton1.txt";
             break;
         }
         return textfile;
@@ -63,7 +62,7 @@ public abstract class RunAutomaton {
 
             Automaton myAutomaton = new Automaton();
             myAutomaton.readFile(textfile);
-            myAutomaton.displayTransitionTable();
+            myAutomaton.displayAutomaton();
             System.out.println(myAutomaton.isAsynchronous());
             System.out.println(myAutomaton.isDeterminist());
             System.out.println(myAutomaton.isComplete());
