@@ -144,11 +144,11 @@ public class Automaton {
 
     public void implementTransition(String line) {
         char[] array = line.toCharArray();
-    
+
         // recover char value into int. entryS and arrivalS are the index of Entry
         int entryS = Character.getNumericValue(array[0]);
         int arrivalS = Character.getNumericValue(array[2]);
-        
+
         Transition newTransition = new Transition(getStateList().get(entryS), array[1], getStateList().get(arrivalS));
         transitionList.add(newTransition);
         stateList.get(entryS).getItsTransitions().add(newTransition); // we implement at the same time itsTransitions
@@ -195,18 +195,140 @@ public class Automaton {
         return true;
     }
 
-    public boolean isComplete(){
-        if(this.isDeterminist() == true){
-            if(this.symbol*this.stateNumber == this.transitionList.size()){ 
+    public boolean isComplete() {
+        if (this.isDeterminist() == true) {
+            if (this.symbol * this.stateNumber == this.transitionList.size()) {
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        else{
+        } else {
             return false;
         }
+    }
+
+    public State mergeInitialStates(ArrayList<State> InitialStates) { // merge all initial states to only one
+        State mergeState = new State();
+        mergeState.setItsTransitions();
+        mergeState.setIsInitial(true);
+        String index = "";
+        int count = 0;
+        for (int i = 0; i < InitialStates.size(); i++) {
+            if (InitialStates.get(i).getIndex() == 0) { // resolve impossibility to get int starting with 0
+                count++;
+            } else {
+                index += String.valueOf(InitialStates.get(i).getIndex()); // index is the new index of determinist
+                                                                          // automaton
+            }
+            if (count == 1) { // add state 0 to the end avoiding 0 to get ignore
+                index += "0";
+            }
+            if (InitialStates.get(i).getIsTerminal() == true) {
+                mergeState.setIsTerminal(true);
+            }
+            for (int j = 0; j < InitialStates.get(i).getItsTransitions().size(); j++) {
+                mergeState.getItsTransitions().add(InitialStates.get(i).getItsTransitions().get(j)); // we add all new
+                                                                                                     // itsTransitions
+                                                                                                     // to the new
+                                                                                                     // transitions
+            }
+        }
+        mergeState.setIndex(Integer.parseInt(index));
+        System.out.println(mergeState);
+        return mergeState;
+    }
+
+    public Automaton determinisation(String textfile) {
+        
+        if (this.isDeterminist() == true) {
+            System.out.println("Already determinist");
+            return this;
+        } else if (this.isAsynchronous() == true) {
+            System.out.println("Your automaton is asynchronous, please use the right mehtod.");
+            return this;
+        }
+
+        Automaton AFD = new Automaton();
+        ArrayList<State> newStateList = new ArrayList<>(); // List with wich we're gonna use for the loop
+        AFD.readFile(textfile); // automaton copy
+
+        if (this.getInitialStates().size() == 1) {
+            System.out.println("There is one initial state");
+            newStateList.add(this.getInitialStates().get(0)); // initial state is the first and unique one.
+        } else {
+            System.out.println("There is multiple initial states");
+            newStateList.add(mergeInitialStates(this.getInitialStates())); // we add all merged initial states in only
+                                                                           // one.
+            System.out.println(newStateList);
+        }
+
+        AFD.stateList.clear();
+        AFD.stateList.add(newStateList.get(0)); // we add the new determinist inital state
+
+        while (newStateList.size() != 0) {
+            for (int i = 97; i < this.symbol + 97; i++) {
+                State newState = new State(); // create a new state for each letter
+                String index = ""; // name of the new state, will be converted into int
+                int count = 0; // 0 counter.
+                for (int j = 0; j < newStateList.get(0).getItsTransitions().size(); j++) { // browse all itsTransitions
+                                                                                           // to create a new one
+                    if (i == newStateList.get(0).getItsTransitions().get(j).getLetter()) {
+                        // resolve the impossibility to get int starting with 0
+                        if (newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex() == 0) {
+                            count++;
+                        } else {
+                            // index of the arrival state to the string
+                            index += String.valueOf(newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex());
+                        }
+                    }
+                }
+                if (count == 1) { // add state 0 to the end avoiding 0 to get ignore
+                    index += "0";
+                }
+                int intIndex = Integer.parseInt(index); // converting index to int
+                int isNotinAFD = 0; //counter to check current state is not already in the AFD 
+                for (int k = 0; k < AFD.stateList.size(); k++) {
+                    if (AFD.stateList.get(k).getIndex() == intIndex) {
+                        isNotinAFD++;
+                    }
+                }
+                
+                if(isNotinAFD == 0){
+                    newState.setIndex(intIndex);
+                    newState.setIsInitial(false);
+                    newState.setIsInitial(false);
+                    newState.setItsTransitions();
+
+                    // we set the new itsTransitions
+                    int temp = intIndex;
+
+                    do {
+                        for (int m = 0; m < String.valueOf(intIndex).length(); m++) { // range of number of int -> 124 =
+                                                                                      // 3 int , 20 = 2 int in it
+                            for (int n = 0; n < this.stateList.get(temp % 10).getItsTransitions().size(); n++) {
+                                newState.getItsTransitions().add(this.getStateList().get(temp % 10).getItsTransitions().get(n));
+                            }
+                            temp /= 10;
+                        }
+                    } while (temp != 0);
+                    
+                    AFD.stateList.add(newState); // new state added to AFD
+                    newStateList.add(newState); // adding it too, to be treated next
+
+                }
+
+            }
+            // remove first treated state 
+            newStateList.remove(0);
+        }
+        
+        //finally we're gonna update the new content of the AFD
+        AFD.stateNumber = AFD.getStateList().size();
+        System.out.println(AFD.stateNumber);
+        System.out.println(AFD.getStateNumber());
+        AFD.rawDisplay();
+
+        return AFD;
     }
 
     // display
@@ -220,7 +342,7 @@ public class Automaton {
 
     public void displayAutomaton() {
         if (this.getInitialStates().size() > 0) {
-            System.out.print(ANSI_GREEN + "Initial states : "+ ANSI_RESET);
+            System.out.print(ANSI_GREEN + "Initial states : " + ANSI_RESET);
             for (int i = 0; i < this.getInitialStates().size(); i++) {
                 System.out.print("(" + this.getInitialStates().get(i).getIndex() + ")");
             }
@@ -251,16 +373,13 @@ public class Automaton {
         System.out.println();
 
         for (int i = 0; i < this.stateList.size(); i++) { // print state by state and line by line
-            if(this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true){
-                System.out.print(ANSI_YELLOW+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
-            }
-            else if(this.stateList.get(i).getIsInitial() == true){
-                System.out.print(ANSI_GREEN+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
-            }
-            else if(this.stateList.get(i).getIsTerminal() == true){
-                System.out.print(ANSI_RED+this.stateList.get(i).getIndex() + ANSI_RESET+"            |");
-            }
-            else{
+            if (this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true) {
+                System.out.print(ANSI_YELLOW + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
+            } else if (this.stateList.get(i).getIsInitial() == true) {
+                System.out.print(ANSI_GREEN + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
+            } else if (this.stateList.get(i).getIsTerminal() == true) {
+                System.out.print(ANSI_RED + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
+            } else {
                 System.out.print(this.stateList.get(i).getIndex() + "            |");
             }
             for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
