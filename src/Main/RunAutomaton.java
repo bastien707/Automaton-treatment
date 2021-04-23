@@ -61,12 +61,10 @@ public abstract class RunAutomaton {
             textfile = selectAutomaton(choice, textfile);
 
             Automaton myAutomaton = new Automaton();
+            Automaton AFD = new Automaton();
             myAutomaton.readFile(textfile);
             myAutomaton.displayAutomaton();
-            System.out.println(myAutomaton.isAsynchronous());
-            System.out.println(myAutomaton.isDeterminist());
-            System.out.println(myAutomaton.isComplete());
-
+            AFD = myAutomaton.determinisation(textfile);
             do {
                 System.out.println("Do you want to exit the program ? (1 = Yes, 2 = No)");
                 choice = input.nextInt();
