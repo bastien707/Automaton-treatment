@@ -16,6 +16,10 @@ public class State {
         this.itsTransitions = itsTransitions;
     }
 
+    public State(){
+
+    }
+
     public void printState(){
         System.out.println("index : "+ index +"| isInitial : "+isInitial+"| isTerminal :"+isTerminal);
         System.out.println("ItsTransitions : "+itsTransitions);
@@ -28,6 +32,10 @@ public class State {
     }
 
     //setters
+    public void setIndex(int newIndex){
+        this.index = newIndex;
+    }
+
     public void setIsInitial(boolean newBool) {
         this.isInitial = newBool;
     }

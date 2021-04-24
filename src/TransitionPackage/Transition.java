@@ -28,7 +28,20 @@ public class Transition {
         return letter;
     }
 
+    //setters
 
+    public void setEntryState(State entryState) {
+        EntryState = entryState;
+    }
+
+    public void setArrivalState(State arrivalState) {
+        ArrivalState = arrivalState;
+    }
+
+    public void setLetter(char letter) {
+        this.letter = letter;
+    }
+    
     @Override
     public String toString() {
         return EntryState.getIndex() +""+""+ letter +""+""+ArrivalState.getIndex();

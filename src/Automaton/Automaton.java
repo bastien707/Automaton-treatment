@@ -155,6 +155,8 @@ public class Automaton {
                                                                       // list of every state
     }
 
+    //Verification
+
     public boolean isAsynchronous() { // check if an automaton is asynchronous
         int count = 0;
         for (int i = 0; i < this.transitionList.size(); i++) {
@@ -207,6 +209,69 @@ public class Automaton {
         else{
             return false;
         }
+    }
+
+    //Function : Standardisation
+    public Automaton Standardisation(String filename){
+        System.out.println("ftest: OK");
+        //Copy automaton text file
+        Automaton AFS = new Automaton();
+        AFS.readFile(filename);
+        //check if initial state is terminal too
+        ArrayList<State> InitialStatesList = new ArrayList<>();
+        InitialStatesList = AFS.getInitialStates();
+        System.out.println("liste etats initiaux:"+InitialStatesList);
+        boolean emptyWord = false;
+        for(int i=0; i<InitialStatesList.size();i++){
+            if(InitialStatesList.get(i).getIsTerminal() == true){
+                emptyWord = true;
+            }
+        }
+        //Create the new initial state : I
+        System.out.println("mot vide:"+emptyWord);
+        System.out.println("liste etats AFS"+AFS.stateList);
+        if(emptyWord == false){
+            State StateI = new State();
+            //StateI.setIndex(this.stateList.size());
+            StateI.setIndex(Character.valueOf('I'));
+            StateI.setIsInitial(true);
+            StateI.setItsTransitions();
+            AFS.stateList.add(StateI);
+            AFS.stateNumber++;
+        }
+        else{
+            State StateI = new State();
+            //StateI.setIndex(this.stateList.size());
+            StateI.setIndex(Character.valueOf('I'));
+            StateI.setIsInitial(true);
+            StateI.setIsTerminal(true);
+            StateI.setItsTransitions();
+            AFS.stateList.add(StateI);
+            AFS.stateNumber++;
+        }
+        System.out.println("ftest: add I");
+        System.out.println("liste etats AFS"+AFS.stateList);
+        //for each initial states, we duplicate there transition to the new state I
+
+        for(int i=0;i<InitialStatesList.size();i++){
+            for(int j =0; j<InitialStatesList.get(i).getItsTransitions().size();j++){
+                Transition ITransition = new Transition(AFS.stateList.get(this.stateList.size()),InitialStatesList.get(i).getItsTransitions().get(j).getLetter(),InitialStatesList.get(i).getItsTransitions().get(j).getArrivalState());
+                AFS.stateList.get(this.stateList.size()).getItsTransitions().add(ITransition);
+            }
+        }
+
+        //Remove initial condition of the AFS initial state
+        for(int i=0;i<AFS.stateList.size();i++){
+            if(AFS.stateList.get(i).getIndex() != 73){
+                AFS.stateList.get(i).setIsInitial(false);
+            }
+        }
+        //Add State I transitions in Transitions List
+        for(int k=0;k<AFS.stateList.get(this.stateList.size()).getItsTransitions().size();k++){
+            AFS.transitionList.add(AFS.stateList.get(this.stateList.size()).getItsTransitions().get(k));
+            AFS.transitionNumber++;
+        }
+        return AFS;
     }
 
     // display
@@ -344,6 +409,13 @@ public class Automaton {
     public static void main(String argvs[]) {
         Automaton myAutomaton = new Automaton();
         myAutomaton.readFile("text/automaton1.txt");
-        myAutomaton.displayTransitionTable();
+        System.out.println("Avant standardisation");
+        myAutomaton.rawDisplay();
+        Automaton AFS = new Automaton();
+        AFS = myAutomaton.Standardisation("text/automaton1.txt");
+        System.out.println("Après standardisation");
+        AFS.displayAutomaton();
+        System.out.println("AF originel");
+        myAutomaton.displayAutomaton();
     }
 }
