@@ -17,6 +17,7 @@ public abstract class RunAutomaton {
         AutomatonList.add("text/automaton2.txt");
         AutomatonList.add("text/automaton3.txt");
         AutomatonList.add("text/automaton4.txt");
+        AutomatonList.add("text/automaton5.txt");
     }
 
     public static String selectAutomaton(int choice, String textfile) {
@@ -37,6 +38,10 @@ public abstract class RunAutomaton {
             textfile = "text/automaton4.txt";
             break;
 
+        case 5:
+            textfile = "text/automaton5.txt";
+            break;
+
         default:
             System.out.print("An error occured with the choice :/");
             break;
@@ -54,9 +59,9 @@ public abstract class RunAutomaton {
         String textfile = "text/automaton1.txt";
         while (run == 1) {
             do {
-                System.out.print("Please select an automaton by pressing a number between 1 to 4 : ");
+                System.out.print("Please select an automaton by pressing a number between 1 to 5 : ");
                 choice = input.nextInt();
-            } while (choice < 1 || choice > 4);
+            } while (choice < 1 || choice > 5);
 
             textfile = selectAutomaton(choice, textfile);
 
@@ -65,6 +70,8 @@ public abstract class RunAutomaton {
             myAutomaton.readFile(textfile);
             myAutomaton.displayAutomaton();
             AFD = myAutomaton.determinisation(textfile);
+            //AFD.displayAutomaton();
+            //System.out.println(AFD.isDeterminist());
             do {
                 System.out.println("Do you want to exit the program ? (1 = Yes, 2 = No)");
                 choice = input.nextInt();
