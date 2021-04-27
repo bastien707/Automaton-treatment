@@ -209,12 +209,47 @@ public class Automaton {
         }
     }
 
-    public State mergeInitialStates(ArrayList<State> InitialStates) { // merge all initial states to only one
+    //return a state that is equal to an other one from the AFD states.
+    public State checkArrivalState(ArrayList<Integer> recoverArrivalStates, char letter){
+        for(int i = 0; i < this.getStateList().size(); i++){ // browse statelist size of  AFD
+           
+            ArrayList<Integer> recoverIndexStates = new ArrayList<>(); //creating new array to recover indexstate  AFD
+            char recoverIndexStateChar[] = String.valueOf(this.getStateList().get(i).getIndex()).toCharArray(); //convertion
+            
+            for(int k = 0; k < String.valueOf(this.getStateList().get(i).getIndex()).length(); k++){
+                recoverIndexStates.add(Character.getNumericValue(recoverIndexStateChar[k]));
+            }
+            //here we have created the recoverIndexStates that is an array containing index of AF int by int like this : [1,2,0] where 120 is an index
+            //then we compare the arrival state we had with the new created above.
+            //System.out.println("Compare : "+recoverIndexStates+"and" + recoverArrivalStates);
+            if(recoverIndexStates.size() == recoverArrivalStates.size()){
+                int count = 0;
+                for(int l = 0; l < recoverIndexStates.size(); l++){
+                    for(int m = 0; m < recoverArrivalStates.size(); m++){
+                        if(recoverIndexStates.get(l) == recoverArrivalStates.get(m)){ 
+                            count++;
+                        }
+                    }
+                }
+                // if count equal to recoverIndexStates size it means that these states are the same 
+                // but they could like 130 and the other 301, it still same state.
+                if(count == recoverIndexStates.size()){ 
+                    return this.getStateList().get(i); // we return the good state wich from the AFD states.
+                }
+            }
+        }
+        return null;
+}
+
+    //method who merge all initial states to only one
+    public State mergeInitialStates(ArrayList<State> InitialStates) { 
         State mergeState = new State();
         mergeState.setItsTransitions();
         mergeState.setIsInitial(true);
         String index = "";
         int count = 0;
+
+        //browse between all initial states.
         for (int i = 0; i < InitialStates.size(); i++) {
             if (InitialStates.get(i).getIndex() == 0) { // resolve impossibility to get int starting with 0
                 count++;
@@ -229,15 +264,90 @@ public class Automaton {
                 mergeState.setIsTerminal(true);
             }
             for (int j = 0; j < InitialStates.get(i).getItsTransitions().size(); j++) {
-                mergeState.getItsTransitions().add(InitialStates.get(i).getItsTransitions().get(j)); // we add all new
-                                                                                                     // itsTransitions
-                                                                                                     // to the new
-                                                                                                     // transitions
+                // we add all new itsTransitions to the new transitions
+                mergeState.getItsTransitions().add(InitialStates.get(i).getItsTransitions().get(j)); 
             }
         }
+        
+        index = removeOccurrence(index, count);
+        System.out.println("[from merge methode] index = "+index);
         mergeState.setIndex(Integer.parseInt(index));
         System.out.println(mergeState);
         return mergeState;
+    }
+
+    //static method that remove occurrence of an index.
+    public static String removeOccurrence(String index, int zeroCount){
+        ArrayList<Integer> indexList = new ArrayList<>();
+        char indexChar[] = String.valueOf(index).toCharArray();
+                
+        for(int k = 0; k < String.valueOf(index).length(); k++){
+            indexList.add(Character.getNumericValue(indexChar[k]));
+        }
+        Set<Integer> mySet = new HashSet<Integer>(indexList);
+        ArrayList<Integer> indexList2 = new ArrayList<Integer>(mySet);
+        if (zeroCount == 1) { // add state 0 to the end avoiding 0 to get ignore
+            indexList2.add(0);
+        }
+        index = "";
+        for(int l = 0; l < indexList2.size(); l++){
+            index+= String.valueOf(indexList2.get(l));
+        }
+        return index;
+    }
+
+    //set itsTransitions of an AFD.
+    public void setAutomatonItsTransitions(){
+        for(int i = 0; i < this.getStateList().size(); i++){
+            for(char k = 97; k< this.symbol+97; k++){
+                ArrayList<Integer> recoverArrivalStates = new ArrayList<>();
+                
+                for(int j = 0; j< this.getStateList().get(i).getItsTransitions().size(); j++){
+                    if(this.getStateList().get(i).getItsTransitions().get(j).getLetter() == k){
+                        recoverArrivalStates.add(this.getStateList().get(i).getItsTransitions().get(j).getArrivalState().getIndex()); //recover arrival state int a char list     
+                    }
+                        
+                }
+                //here we remove occurrence, resolve occurrence issue.
+                Set<Integer> mySet = new HashSet<Integer>(recoverArrivalStates);
+                ArrayList<Integer> recoverArrivalState2 = new ArrayList<Integer>(mySet);
+                
+                State s1 = new State();
+                s1 = this.checkArrivalState(recoverArrivalState2, k);
+                //System.out.println("new State s1 : "+s1+" with current letter  : "+k);
+                if(s1 != null){
+                    Transition t1 = new Transition(this.getStateList().get(i), k, s1 );
+                    this.getStateList().get(i).getItsTransitions().add(t1);
+                }
+            }
+        }
+    }
+
+    //set transitions of any automaton
+    public void setAutomatonTransitions(){
+        this.setTransitionList();
+        this.setTransitionNumber("0"); 
+        for(int i = 0; i < this.stateList.size(); i++){
+            for(int j = 0; j < this.getStateList().get(i).getItsTransitions().size() ;j++){
+                this.getTransitionList().add(this.getStateList().get(i).getItsTransitions().get(j));
+                this.transitionNumber++;
+            }
+        }
+    }
+
+    public void setAutomatonTerminalStates(Automaton AF){
+        for (int i = 0; i < AF.getFinalStates().size(); i++){ // browse between terminal states of original AF
+            for(int j = 0; j < this.stateNumber; j++){ // browse statelist of AFD
+                char recoverStateListIndex[] = String.valueOf(this.getStateList().get(j).getIndex()).toCharArray();//recover an array of the index in order to transform 130 to [1,3,0]
+                
+                for(int k = 0; k < recoverStateListIndex.length; k++){ // browse between size of [1,3,0]
+                    int recoverOneState = Character.getNumericValue(recoverStateListIndex[k]); // convert into int
+                    if(recoverOneState == AF.getFinalStates().get(i).getIndex()){ // we check if the terminal index is equal to the current one
+                        this.getStateList().get(j).setIsTerminal(true); // if its true we set it as terminal
+                    }
+                }
+            }
+        }
     }
 
     public Automaton determinisation(String textfile) {
@@ -255,80 +365,58 @@ public class Automaton {
         AFD.readFile(textfile); // automaton copy
 
         if (this.getInitialStates().size() == 1) {
-            System.out.println("There is one initial state");
+            //There is one initial state
             newStateList.add(this.getInitialStates().get(0)); // initial state is the first and unique one.
         } else {
-            System.out.println("There is multiple initial states");
-            newStateList.add(mergeInitialStates(this.getInitialStates())); // we add all merged initial states in only
-                                                                           // one state.
-            System.out.println(newStateList);
+            //There is multiple initial states
+            newStateList.add(mergeInitialStates(this.getInitialStates())); // we add all merged initial states in only one state.
         }
 
-        AFD.stateList.clear();
+        AFD.stateList.clear(); // clear all old states.
         AFD.stateList.add(newStateList.get(0)); // we add the new determinist inital state
 
+        //in this loop we create all AFD states.
         while (newStateList.size() != 0) {
             for (int i = 97; i < this.symbol + 97; i++) {
                 State newState = new State(); // create a new state for each letter
                 String index = ""; // name of the new state, will be converted into int
-                int count = 0; // 0 counter.
+                int zeroCount = 0; // 0 counter.
                 for (int j = 0; j < newStateList.get(0).getItsTransitions().size(); j++) { // browse all itsTransitions
                                                                                            // to create a new one
                     if(i == newStateList.get(0).getItsTransitions().get(j).getLetter()){
                         // resolve the impossibility to get int starting with 0
                         if (newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex() == 0) {
-                            
-                            count++;
+                            zeroCount++;
                         } else 
                             index += String.valueOf(newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex());
-                            
                     }
                 }
                 //remove occurrence :
-                /* 
-                ArrayList<Integer> indexList = new ArrayList<>();
-                char indexChar[] = String.valueOf(index).toCharArray();
-                
-                for(int k = 0; k < String.valueOf(index).length(); k++){
-                    indexList.add(Character.getNumericValue(indexChar[k]));
-                }
-                Set<Integer> mySet = new HashSet<Integer>(indexList);
-                ArrayList<Integer> indexList2 = new ArrayList<Integer>(mySet);
-                if (count == 1) { // add state 0 to the end avoiding 0 to get ignore
-                    indexList2.add(0);
-                }
-                index = "";
-                for(int l = 0; l < indexList2.size(); l++){
-                    index+= String.valueOf(indexList2.get(l));
-                }*/
-                if (count == 1) { // add state 0 to the end avoiding 0 to get ignore
-                    index+="0";
-                }
-                System.out.println("index : "+index);
+                index = removeOccurrence(index, zeroCount);
 
                 //creating new state
                 if(index != ""){
                     int intIndex = Integer.parseInt(index); // converting index to int
-                    
                     int isNotinAFD = 0; //counter to check current state is not already in the AFD 
                     for (int k = 0; k < AFD.stateList.size(); k++) {
                         if (AFD.stateList.get(k).getIndex() == intIndex) {
                             isNotinAFD++;
                         }
                     }
-                    
+                    //if the state doesn't exist, we build it.
                     if(isNotinAFD == 0){
                         newState.setIndex(intIndex);
                         newState.setIsInitial(false);
                         newState.setIsInitial(false);
                         newState.setItsTransitions();
-
                         
+                        // we set the itsTransitions of the new in a do-while loop
+                        //those are not the final itsTransitions because they're made with old states but it
+                        //is essential for the loop
                         int temp = intIndex;
-                        // we set the itsTransitions in a do-while loop
                         do {
-                            for (int m = 0; m < String.valueOf(intIndex).length(); m++) { // range of number of int -> 124 =
-                                                                                        // 3 int , 20 = 2 int in it
+                            // range of number of int -> 124 = 3 int , 13 = 2 int in it etc.
+                            for (int m = 0; m < String.valueOf(intIndex).length(); m++) { 
                                 for (int n = 0; n < this.stateList.get(temp % 10).getItsTransitions().size(); n++) { //we browse the itsTransitions.
                                     newState.getItsTransitions().add(this.getStateList().get(temp % 10).getItsTransitions().get(n));
                                 }
@@ -338,34 +426,17 @@ public class Automaton {
                         
                         AFD.stateList.add(newState); // new state added to AFD
                         newStateList.add(newState); // adding it too, to be treated next
-
                     }
-                    
                 }
-                else{
-                    System.out.println("void");
-                }
-
             }
             // remove first treated state 
             newStateList.remove(0);
         }
-        
         //finally we're gonna update the new content of the AFD
         AFD.stateNumber = AFD.getStateList().size(); // set size of statelist
-        //set terminal states : 
-        for (int i = 0; i < this.getFinalStates().size(); i++){ // browse between terminal states of original AF
-            for(int j = 0; j < AFD.stateNumber; j++){ // browse statelist of AFD
-                char recoverStateListIndex[] = String.valueOf(AFD.getStateList().get(j).getIndex()).toCharArray();//recover an array of the index in order to transform 130 to [1,3,0]
-                
-                for(int k = 0; k < recoverStateListIndex.length; k++){ // browse between size of [1,3,0]
-                    int recoverOneState = Character.getNumericValue(recoverStateListIndex[k]); // convert into int
-                    if(recoverOneState == this.getFinalStates().get(i).getIndex()){ // we check if the terminal index is equal to the current one
-                        AFD.getStateList().get(j).setIsTerminal(true); // if its true we set it as terminal
-                    }
-                }
-            }
-        }
+        
+        //set terminal states 
+        AFD.setAutomatonTerminalStates(this);
         
         //recovering size of each itsTransitions in order to get rid of them at the end
         ArrayList<Integer> sizeItsTransitions = new ArrayList<>();
@@ -373,26 +444,9 @@ public class Automaton {
             sizeItsTransitions.add(AFD.getStateList().get(i).getItsTransitions().size());
         }
 
-        for(int i = 0; i < AFD.getStateList().size(); i++){
-            for(char k = 97; k< AFD.symbol+97; k++){
-                ArrayList<Integer> recoverArrivalStates = new ArrayList<>();
-                
-                for(int j = 0; j< AFD.getStateList().get(i).getItsTransitions().size(); j++){
-                    if(AFD.getStateList().get(i).getItsTransitions().get(j).getLetter() == k){
-                        recoverArrivalStates.add(AFD.getStateList().get(i).getItsTransitions().get(j).getArrivalState().getIndex()); //recover arrival state int a char list     
-                    }
-                        
-                }
-                    State s1 = new State();
-                    s1 = AFD.checkArrivalState(recoverArrivalStates, k);
-                    if(s1 != null){
-                        Transition t1 = new Transition(AFD.getStateList().get(i), k, s1 );
-                        AFD.getStateList().get(i).getItsTransitions().add(t1);
-                    }
-                    
-                    
-            }
-        }
+        //initializing all itsTransitions of new states.
+        AFD.setAutomatonItsTransitions();
+
         //removing old states.
         for(int i = 0; i < AFD.stateList.size(); i++){
             for(int j = 0; j < sizeItsTransitions.get(i); j++){
@@ -401,53 +455,10 @@ public class Automaton {
         }
 
         //here we are updating the transition list
-        AFD.setTransitionList();
-        AFD.setTransitionNumber("0"); 
-        for(int i = 0; i < AFD.stateList.size(); i++){
-            for(int j = 0; j < AFD.getStateList().get(i).getItsTransitions().size() ;j++){
-                AFD.getTransitionList().add(AFD.getStateList().get(i).getItsTransitions().get(j));
-                AFD.transitionNumber++;
-            }
-        }
-        
-        AFD.rawDisplay();
+        AFD.setAutomatonTransitions();
         return AFD;
     }
-    
-    //return a state that is equal to an other one from the AFD states.
-    public State checkArrivalState(ArrayList<Integer> recoverArrivalStates, char letter){
-            for(int i = 0; i < this.getStateList().size(); i++){ // browse statelist size of  AFD
-               
-                ArrayList<Integer> recoverIndexStates = new ArrayList<>(); //creating new array to recover indexstate  AFD
-                char recoverIndexStateChar[] = String.valueOf(this.getStateList().get(i).getIndex()).toCharArray(); //convertion
-                
-                for(int k = 0; k < String.valueOf(this.getStateList().get(i).getIndex()).length(); k++){
-                    recoverIndexStates.add(Character.getNumericValue(recoverIndexStateChar[k]));
-                }
-                //here we have created the recoverIndexStates that is an array containing index of AF int by int like this : [1,2,0] where 120 is an index
-                //then we compare the arrival state we had with the new created above.
-                //System.out.println("Compare : "+recoverIndexStates+"and" + recoverArrivalStates);
-                if(recoverIndexStates.size() == recoverArrivalStates.size()){
-                    int count = 0;
-                    for(int l = 0; l < recoverIndexStates.size(); l++){
-                        for(int m = 0; m < recoverArrivalStates.size(); m++){
-                            if(recoverIndexStates.get(l) == recoverArrivalStates.get(m)){ 
-                                count++;
-                            }
-                        }
-                    }
-                    // if count equal to recoverIndexStates size it means that these states are the same 
-                    //but they are like 130 and the other 301 it still same state.
-                    if(count == recoverIndexStates.size()){ 
-                        //System.out.println("Index"+recoverIndexStates);
-                        //System.out.println("Arrival"+recoverArrivalStates);
-                        return this.getStateList().get(i); // we return the good state wich from the AFD states.
-                    }
-                
-                }
-            }
-            return null;
-    }
+
 
     // display
 
