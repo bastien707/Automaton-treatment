@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Set;
+//occurrence
 import java.util.HashSet;
 
 public class Automaton {
@@ -491,63 +492,122 @@ public class Automaton {
         }
         displayTransitionTable();
     }
+    public static void dynamicStatesDisplay(int sizeOfState){
+        switch(sizeOfState){
+            case 0:
+                System.out.print(" ".repeat(16) + "|"); // repeat 16 times a space " "
+                break;
+            case 1:
+                System.out.print(" ".repeat(16) + "|"); // repeat 16 times a space " "
+                break;
+            case 2:
+                System.out.print(" ".repeat(15) + "|");
+                break;
+            case 3:
+                System.out.print(" ".repeat(14) + "|");
+                break;
+            case 4:
+                System.out.print(" ".repeat(13) + "|");
+                break;
+            case 5:
+                System.out.print(" ".repeat(12) + "|");
+                break;
+        }
+    }
+    public void colorDisplay(int i){
+        int sizeOfState = String.valueOf(this.getStateList().get(i).getIndex()).length();
+
+        if (this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true) {
+            System.out.print(ANSI_YELLOW + this.stateList.get(i).getIndex() + ANSI_RESET);
+            dynamicStatesDisplay(sizeOfState);
+        } else if (this.stateList.get(i).getIsInitial() == true) {
+            System.out.print(ANSI_GREEN + this.stateList.get(i).getIndex() + ANSI_RESET);
+            dynamicStatesDisplay(sizeOfState);
+        } else if (this.stateList.get(i).getIsTerminal() == true) {
+            System.out.print(ANSI_RED + this.stateList.get(i).getIndex() + ANSI_RESET);
+            dynamicStatesDisplay(sizeOfState);
+        } else {
+            System.out.print(this.stateList.get(i).getIndex());
+            dynamicStatesDisplay(sizeOfState);
+        }
+    }
+
+    public void nonDeterministDisplay(int i){
+        for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
+            int count = 0;
+
+            // we check for each itsTransition if the letters match with the current symbol
+            for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) { 
+                if (this.stateList.get(i).getItsTransitions().get(k).getLetter() == j) {
+                    count++;
+                    if (count >= 2) { // display "," to separate each state.
+                        System.out.print(",");
+                    }
+                    System.out.print(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex());
+                }
+            }
+            if (count == 0) {
+                System.out.print("-");
+                count = 1;
+            }
+            //count equal number of state for AF
+            switch (count) { // for a dynamic display
+            case 0:
+                System.out.print(" ".repeat(17) + "|"); // repeat 17 times a space " "
+                break;
+            case 1:
+                System.out.print(" ".repeat(16) + "|");
+                break;
+            case 2:
+                System.out.print(" ".repeat(14) + "|");
+                break;
+            case 3:
+                System.out.print(" ".repeat(13) + "|");
+                break;
+            case 4:
+                System.out.print(" ".repeat(12) + "|");
+                break;
+            }
+            count = 0;
+        }
+    }
+
+    public void deterministDisplay(int i){
+        for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
+            int count = 0;
+            // we check for each itsTransition if the letters match with the current symbol
+            for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) { 
+               
+                if (this.stateList.get(i).getItsTransitions().get(k).getLetter() == j) {
+                    System.out.print(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex());
+                    dynamicStatesDisplay(String.valueOf(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex()).length());  
+                    count++;
+                }
+            
+            }
+            if(count == 0){
+                System.out.print("-");
+                System.out.print(" ".repeat(16) + "|");
+            }
+        }
+    }
 
     public void displayTransitionTable() {
         System.out.println();
         System.out.print("Automaton");
         for (char i = 97; i < (this.symbol) + 97; i++) {
-            System.out.print("    |    " + i); // we print all letters.
+            System.out.print("        |        " + i); // we print all letters.
         }
-        System.out.print("    |");
+        System.out.print("        |");
         System.out.println();
 
         for (int i = 0; i < this.stateList.size(); i++) { // print state by state and line by line
-            if (this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true) {
-                System.out.print(ANSI_YELLOW + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
-            } else if (this.stateList.get(i).getIsInitial() == true) {
-                System.out.print(ANSI_GREEN + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
-            } else if (this.stateList.get(i).getIsTerminal() == true) {
-                System.out.print(ANSI_RED + this.stateList.get(i).getIndex() + ANSI_RESET + "            |");
-            } else {
-                System.out.print(this.stateList.get(i).getIndex() + "            |");
+            this.colorDisplay(i);
+            if(this.isDeterminist() == false){
+                this.nonDeterministDisplay(i);
             }
-            for (char j = 97; j < (this.symbol) + 97; j++) { // we go all over symbol alphabet.
-                int count = 0;
-                for (int k = 0; k < this.stateList.get(i).getItsTransitions().size(); k++) { // we check for each
-                                                                                             // itsTransition if the
-                                                                                             // letters match with the
-                                                                                             // current symbol
-                    if (this.stateList.get(i).getItsTransitions().get(k).getLetter() == j) {
-                        count++;
-                        if (count >= 2) { // display "," to separate each state.
-                            System.out.print(",");
-                        }
-                        System.out.print(this.stateList.get(i).getItsTransitions().get(k).getArrivalState().getIndex());
-                    }
-                }
-                if (count == 0) {
-                    System.out.print("-");
-                    count = 1;
-                }
-                switch (count) { // for a dynamic display
-                case 0:
-                    System.out.print(" ".repeat(9) + "|"); // repeat 9 times a space " "
-                    break;
-                case 1:
-                    System.out.print(" ".repeat(8) + "|");
-                    break;
-                case 2:
-                    System.out.print(" ".repeat(6) + "|");
-                    break;
-                case 3:
-                    System.out.print(" ".repeat(4) + "|");
-                    break;
-                case 4:
-                    System.out.print(" ".repeat(5) + "|");
-                    break;
-                }
-
-                count = 0;
+            else{
+                this.deterministDisplay(i);
             }
             System.out.println();
         }
