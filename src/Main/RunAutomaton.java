@@ -23,7 +23,7 @@ public abstract class RunAutomaton {
     public static String selectAutomaton(int choice, String textfile) {
         switch (choice) {
         case 1:
-            textfile = "text/automaton1.txt";
+            textfile = "text/automaton1.txt"; //depend of where we're compiling
             break;
 
         case 2:
@@ -57,7 +57,7 @@ public abstract class RunAutomaton {
         Scanner input = new Scanner(System.in);
         int choice;
         String textfile = "text/automaton1.txt";
-        while (run == 1) {
+        while (run == 1) {    
             do {
                 System.out.print("Please select an automaton by pressing a number between 1 to 5 : ");
                 choice = input.nextInt();
@@ -70,8 +70,8 @@ public abstract class RunAutomaton {
             myAutomaton.readFile(textfile);
             myAutomaton.displayAutomaton();
             AFD = myAutomaton.determinisation(textfile);
-            //AFD.displayAutomaton();
-            //System.out.println(AFD.isDeterminist());
+            AFD.displayAutomaton();
+            System.out.println(AFD.isDeterminist()+" - "+AFD.isComplete());
             do {
                 System.out.println("Do you want to exit the program ? (1 = Yes, 2 = No)");
                 choice = input.nextInt();
@@ -81,6 +81,5 @@ public abstract class RunAutomaton {
             } while (choice < 1 || choice > 2);
         }
         input.close();
-
     }
 }
