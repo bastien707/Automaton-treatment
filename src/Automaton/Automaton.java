@@ -211,7 +211,8 @@ public class Automaton {
         }
     }
 
-    //Function : Standardisation
+    //FUNCTIONS
+    //Standardisation
     public Automaton Standardisation(String filename){
         System.out.println("ftest: OK");
         //Copy automaton text file
@@ -272,6 +273,29 @@ public class Automaton {
             AFS.transitionNumber++;
         }
         return AFS;
+    }
+
+    public boolean recognize_word_automaton(String mot){
+        //etablir un etat courant <- prend etat initial
+        /*do
+        {
+            //prendre la lettre
+            //la comparer aux transitions de l etat
+            //ajouter les etats suivants possibles a une pile
+            //l etat courant prend le premier de la pile
+
+            Conditions
+            si lettre = eof -> true
+            
+        }while(); tq la pile n'est pas vide*/
+        /*int i;
+        State curant_state = new State();
+        curant_state = this.stateList.get(i);
+        
+        do{
+
+        }while();*/
+        return false;
     }
 
     // display
