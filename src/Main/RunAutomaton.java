@@ -27,9 +27,6 @@ public abstract class RunAutomaton {
             myAutomaton.displayAutomaton();
             AFD = myAutomaton.determinisation(textfile);
             AFD.displayAutomaton();
-            System.out.println("Automaton is Asynchronous : "+ AFD.isAsynchronous());
-            System.out.println("Automaton is Determinist : "+ AFD.isDeterminist());
-            System.out.println("Automaton is Complete : "+ AFD.isComplete());
             do {
                 System.out.println("Do you want to exit the program ? (1 = Yes, 2 = No)");
                 choice = input.nextInt();
