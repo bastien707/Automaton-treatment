@@ -11,6 +11,7 @@ public abstract class RunAutomaton {
         fillAutomatonList(AutomatonList);
         displayMenu();
         Scanner input = new Scanner(System.in);
+        Scanner kb = new Scanner(System.in);
         int choice;
         String textfile = "text/D3-1.txt";
         while (run == 1) {    
@@ -21,26 +22,63 @@ public abstract class RunAutomaton {
 
             textfile = selectAutomaton(choice, textfile);
 
-            Automaton myAutomaton = new Automaton();
+            Automaton AF = new Automaton();
+            AF.readFile(textfile);
+            System.out.println("------------------- Automaton "+choice+" selected -----------------");
+            AF.displayAutomaton();
+            
+            //pause to see the table transition
+            System.out.println("------------------- Press ENTER to continue -----------------");
+            kb.nextLine();
+            
             Automaton AFD = new Automaton();
-            myAutomaton.readFile(textfile);
-            myAutomaton.displayAutomaton();
-            AFD = myAutomaton.determinisation(textfile);
-            AFD.displayAutomaton();
+            Automaton AFDC = new Automaton();
+            
+            if (AF.isAsynchronous() == false){
+                
+                if(AF.isDeterminist()){
+                    if(AF.isComplete()){
+                        AFDC = AF.completion();
+                    }
+                    else{
+                        AFDC = AF.completion();
+                    }
+                }
+                else{
+                    AFD = AF.determinisation(textfile);
+                    AFDC = AFD.completion();
+                }
+                System.out.println("------------------- AFDC -----------------");
+                AFDC.displayAutomaton();
+            }
+            else if(AF.isAsynchronous() == true){
+                System.out.println("We're working on asychronous automaton... please try again later.");
+            }
+            
             do {
                 System.out.println("Do you want to exit the program ? (1 = Yes, 2 = No)");
                 choice = input.nextInt();
                 if (choice == 1) {
+                    displayGoodbye();
                     run = 0;
                 }
             } while (choice < 1 || choice > 2);
+            
         }
+        kb.close();
         input.close();
+        
     }
 
     public static void displayMenu() {
         System.out.println();
         System.out.println("------------------- Welcome -----------------");
+        System.out.println();
+    }
+
+    public static void displayGoodbye(){
+        System.out.println();
+        System.out.println("------------------- Goodbye ! -----------------");
         System.out.println();
     }
 
