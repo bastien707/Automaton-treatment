@@ -108,6 +108,7 @@ public class Automaton {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
 
     public void implementIs(String line) {
         char[] array = line.toCharArray();
@@ -271,7 +272,7 @@ public class Automaton {
         
         index = removeOccurrence(index, count);
         mergeState.setIndex(Integer.parseInt(index));
-        System.out.println(mergeState);
+        //System.out.println(mergeState);
         return mergeState;
     }
 
@@ -520,9 +521,67 @@ public class Automaton {
         return AFS;
     }
 
+    //completion
+    public Automaton completion(){
+        if(this.isComplete()){
+            System.out.println("Automaton already complete.");
+            return this;
+        }
+        else if(this.isDeterminist() == false){
+            System.out.println("You must to determine your automaton first.");
+            return this;
+        }
+        else if(this.isAsynchronous() == true){
+            System.out.println("Please find an synchronous automaton.");
+            return this;
+        }
+        else{
+            // creating the new bin state.
+            ArrayList<Transition> binItsTransitions = new ArrayList<>();
+            State bin = new State(-1, false, false, binItsTransitions);
+            this.stateList.add(bin);
+            this.stateNumber++;
+             
+            for(int i = 0; i < this.stateNumber; i++){
+                //checking if there as many itsTransition than symbol, if not it mean it missing transitions.
+                if(this.getStateList().get(i).getItsTransitions().size() < this.symbol){
+                    //first case : if itsTransition.size == 0, we create all state to bin.
+                    if(this.getStateList().get(i).getItsTransitions().size() == 0){
+                        char letter = 97;
+                        for(int j = 0; j < this.symbol; j++){
+                            Transition binTransition = new Transition(this.getStateList().get(i), letter, bin);
+                            this.getStateList().get(i).getItsTransitions().add(binTransition);
+                            this.transitionList.add(binTransition);
+                            this.transitionNumber++;
+                            letter++;
+                        }
+                    }
+                    else{
+                        char letter = 97;
+                        for(int j = 0; j < this.symbol; j++){
+                            int equalCount = 0;
+                            for(int k = 0; k < this.getStateList().get(i).getItsTransitions().size(); k++){
+                                if(this.getStateList().get(i).getItsTransitions().get(k).getLetter() == letter){
+                                    equalCount++;
+                                }
+                            }
+                            //if equalCOunt == 0 it mean that the current letter is not part of any transition so we create it.
+                            if(equalCount == 0){
+                                Transition binTransition = new Transition(this.getStateList().get(i), letter, bin);
+                                this.getStateList().get(i).getItsTransitions().add(binTransition);
+                                this.transitionList.add(binTransition);
+                                this.transitionNumber++;
+                            }
+                            letter++;
+                        }
+                    }
+                }
+            }
+        }
+        return this;
+    }
 
     // display
-
     public void rawDisplay() {
         System.out.println(this.symbol + "\n" + this.stateNumber);
         System.out.println(this.stateList);
@@ -581,11 +640,14 @@ public class Automaton {
         if (this.stateList.get(i).getIsInitial() == true && this.stateList.get(i).getIsTerminal() == true) {
             System.out.print(ANSI_YELLOW + this.stateList.get(i).getIndex() + ANSI_RESET);
             dynamicStatesDisplay(sizeOfState);
-        } else if (this.stateList.get(i).getIsInitial() == true) {
+        } else if (this.stateList.get(i).getIsInitial() == true) { // green for initial transition
             System.out.print(ANSI_GREEN + this.stateList.get(i).getIndex() + ANSI_RESET);
             dynamicStatesDisplay(sizeOfState);
-        } else if (this.stateList.get(i).getIsTerminal() == true) {
+        } else if (this.stateList.get(i).getIsTerminal() == true) { // red for terminal transition
             System.out.print(ANSI_RED + this.stateList.get(i).getIndex() + ANSI_RESET);
+            dynamicStatesDisplay(sizeOfState);
+        } else if(this.stateList.get(i).getIndex() < 0){ // blue for bin transition
+            System.out.print(ANSI_BLUE + this.stateList.get(i).getIndex() + ANSI_RESET);
             dynamicStatesDisplay(sizeOfState);
         } else {
             System.out.print(this.stateList.get(i).getIndex());
