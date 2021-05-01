@@ -102,8 +102,18 @@ public class Automaton {
         return FinalStatesList;
     }
 
-    // methods
+    public ArrayList<State> getNonTerminalStates() {
+        ArrayList<State> nonTerminalStatesList = new ArrayList<>();
+        for (int i = 0; i < this.stateList.size(); i++) {
+            if (this.stateList.get(i).getIsTerminal() == false) {
+                nonTerminalStatesList.add(this.stateList.get(i));
+            }
+        }
+        return nonTerminalStatesList;
+    }
 
+    // methods
+    //color to be more joyful
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -576,6 +586,139 @@ public class Automaton {
                         }
                     }
                 }
+            }
+        }
+        return this;
+    }
+
+    public Automaton minimizing(){
+        if(this.isDeterminist() == false || this.isComplete() == false){
+            System.out.println("Your automaton must be an AFDC.");
+            return this;
+        }
+        //Theta is a list of list of states. Will contain terminal and non terminal list of states.
+        ArrayList<ArrayList<State>> Theta = new ArrayList<>();
+        Theta.add(this.getFinalStates()); // all terminal states.
+        Theta.add(this.getNonTerminalStates()); // all nonTerminal states.
+        ArrayList<ArrayList<State>> ThetaBis = new ArrayList<>();
+        int equal = 0;
+        while(equal == 0){
+            //we go through lists in theta.
+            for(int i = 0; i < Theta.size(); i++){
+                ArrayList<ArrayList<Character>> listTag = new ArrayList<>();
+                //we go through one list of theta
+                for(int j = 0; j < Theta.get(i).size(); j++){
+                    ArrayList<Character> oneListTag = new ArrayList<>();
+                    for(int k = 0; k < Theta.get(i).get(j).getItsTransitions().size(); k++){
+                        for(int l = 0; l <Theta.size(); l++){
+                            for(int m = 0; m < Theta.get(l).size(); m++){
+                                if(Theta.get(i).get(j).getItsTransitions().get(k).getArrivalState().getIndex() == Theta.get(l).get(m).getIndex()){
+                                    String index = Integer.toString(l);
+                                    oneListTag.add(index.charAt(0)); 
+                                    break;
+                                }
+                            }
+                        } 
+                    }
+                    //add the new Tag to the list 
+                    listTag.add(oneListTag);
+                }
+                // here we merge all partition of the current partition.
+                ArrayList<ArrayList<Character>> treated = new ArrayList<>();
+
+                for(int index = 0; index < listTag.size(); index++){
+                    
+                    int treatedCount = 0;
+                    ArrayList<Character> temp = new ArrayList<>();
+                    temp = listTag.get(index);
+                    for(int b = 0; b < treated.size(); b++){
+                        if(treated.get(b).equals(temp)){
+                            treatedCount++;
+                        }
+                    }
+                    if(treatedCount == 0){
+                        ArrayList<State> selectedStates = new ArrayList<>();
+                        for(int a = 0; a < listTag.size(); a++){
+                            //we pass if we are on the tag that we are comparing 
+                            if(index != a){
+                                if(temp.equals(listTag.get(a))){
+                                    selectedStates.add(Theta.get(i).get(a));
+                                }
+                            }
+                            else{
+                                selectedStates.add(Theta.get(i).get(a));
+                            }
+                        }
+                        ThetaBis.add(selectedStates);
+                        treated.add(temp);
+                    }
+                }
+            }
+            //now we have our new partition, let's do it again
+            
+            if(Theta.equals(ThetaBis)){
+                //we stop the process when equals, it mean that if we minimize a x times, we get the same automaton
+                equal = 1;
+            }
+            else{
+                //we make a copy and continue to minimize
+                Theta.clear();
+                for(int count = 0; count < ThetaBis.size(); count++){
+                    Theta.add(ThetaBis.get(count));
+                }
+                ThetaBis.clear();
+            }
+        }
+        //creating minimal automaton
+        ArrayList<State> minimalStateList = new ArrayList<>();
+        for(int i = 0; i < ThetaBis.size(); i++){
+            State minimalState = new State(i, false, false, null);
+            minimalState.setItsTransitions();
+            minimalStateList.add(minimalState);
+        }
+        //so we create all new minimal states
+        for(int i = 0; i < minimalStateList.size(); i++){
+            if(ThetaBis.get(i).size() == 1){
+                minimalStateList.get(i).setIsInitial(ThetaBis.get(i).get(0).getIsInitial());
+                minimalStateList.get(i).setIsTerminal(ThetaBis.get(i).get(0).getIsTerminal());
+            }
+            
+            else{
+                boolean newInitial = false, newTerminal = false;
+                for(int j = 0; j < ThetaBis.get(i).size(); j++){
+                    
+                    if(ThetaBis.get(i).get(j).getIsInitial() == true){
+                        newInitial = ThetaBis.get(i).get(j).getIsInitial();
+                    }
+                    if(ThetaBis.get(i).get(j).getIsTerminal() == true){
+                        newTerminal= ThetaBis.get(i).get(j).getIsInitial();
+                    }
+                }
+                //we make sure we don't forget any state when there are several
+                minimalStateList.get(i).setIsInitial(newInitial);
+                minimalStateList.get(i).setIsTerminal(newTerminal);
+            }
+            //we browse between all thetabis states and find those who match
+            for(int k = 0; k < ThetaBis.get(i).get(0).getItsTransitions().size(); k++){
+                for(int l = 0; l < ThetaBis.size(); l++){
+                    for(int m = 0; m < ThetaBis.get(l).size(); m++){
+                        if(ThetaBis.get(l).get(m).getIndex() == ThetaBis.get(i).get(0).getItsTransitions().get(k).getArrivalState().getIndex()){
+                            Transition newTransition = new Transition(minimalStateList.get(i),ThetaBis.get(i).get(0).getItsTransitions().get(k).getLetter(),minimalStateList.get(l));
+                            minimalStateList.get(i).getItsTransitions().add(newTransition);
+                        }
+                    }
+                }
+            }
+        }
+        //here we have all new states in minimalStateList
+        //now we are updating our automaton
+        this.stateList = minimalStateList;
+        this.stateNumber = minimalStateList.size();
+        this.transitionNumber = this.stateNumber*symbol;
+        this.transitionList.clear();
+        for(int i = 0; i < this.stateNumber; i++){
+            for(int j = 0; j < this.symbol; j++){
+                this.transitionList.add(minimalStateList.get(i).getItsTransitions().get(j));
             }
         }
         return this;
