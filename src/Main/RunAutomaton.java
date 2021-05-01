@@ -21,7 +21,7 @@ public abstract class RunAutomaton {
             } while (choice < 1 || choice > 44);
 
             textfile = selectAutomaton(choice, textfile);
-
+            
             Automaton AF = new Automaton();
             AF.readFile(textfile);
             System.out.println("------------------- Automaton "+choice+" selected -----------------");
@@ -49,6 +49,11 @@ public abstract class RunAutomaton {
                     AFDC = AFD.completion();
                 }
                 System.out.println("------------------- AFDC -----------------");
+                AFDC.displayAutomaton();
+                System.out.println("------------------- Press ENTER to continue -----------------");
+                kb.nextLine();
+                System.out.println("------------------- AFDCM -----------------");
+                AFDC.minimizing();
                 AFDC.displayAutomaton();
             }
             else if(AF.isAsynchronous() == true){
