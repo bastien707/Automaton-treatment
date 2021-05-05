@@ -275,7 +275,7 @@ public class Automaton {
         return AFS;
     }
 
-    public boolean recognize_word_automaton(String mot){
+    public boolean recognize_word_automaton_deterministe(String mot){
         //etablir un etat courant <- prend etat initial
         /*do
         {
@@ -298,7 +298,23 @@ public class Automaton {
         return false;
     }
 
-    // display
+    public void switch_complementary_language(){
+        //Check if an automaton is determinist and complete
+        if(this.isDeterminist() || this.isComplete() == false){
+            return("ERROR: this automaton must be determinist and complete");
+        }
+        //For each states we reverse the terminal status
+        for(int i=0;i<this.stateList.size();i++){
+            if(this.stateList.get(i).getIsTerminal() == true){
+                this.stateList.get(i).setIsTerminal(false);
+            }
+            else{
+                this.stateList.get(i).setIsTerminal(true);
+            }
+        }   
+    }
+
+    // Display
 
     public void rawDisplay() {
         System.out.println(this.symbol + "\n" + this.stateNumber);
@@ -441,5 +457,8 @@ public class Automaton {
         AFS.displayAutomaton();
         System.out.println("AF originel");
         myAutomaton.displayAutomaton();
+        System.out.println("Passage Complémentaire");
+        myAutomaton.switch_complementary_language();
+
     }
 }
