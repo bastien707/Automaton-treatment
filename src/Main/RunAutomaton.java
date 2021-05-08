@@ -436,7 +436,7 @@ public abstract class RunAutomaton {
                 textfile = "text/D3-43.txt"; // depend of where we're compiling
                 break;
             case 44:
-                textfile = "text/D3-42.txt"; // depend of where we're compiling
+                textfile = "text/D3-44.txt"; // depend of where we're compiling
                 break;
             default:
                 System.out.print("An error occured with the choice :/");
