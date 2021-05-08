@@ -17,8 +17,10 @@ Initial states : (1)
 Final states : (1)
 
 Automaton        |        a        |        b        |        c        |        d        |
-0                |-                |0                |-                |1                |
-1                |1                |-                |0                |-                |
+0                |-                |-                |-                |1                |
+1                |2,3,0            |-                |-                |-                |
+2                |-                |3                |-                |-                |
+3                |-                |-                |0                |-                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -38,8 +40,10 @@ Initial states : (1)
 Final states : (1)
 
 Automaton        |        a        |        b        |        c        |        d        |
-0                |-1               |0                |-1               |1                |
-1                |1                |-1               |0                |-1               |
+1                |230              |-1               |-1               |-1               |
+230              |-1               |3                |0                |1                |
+3                |-1               |-1               |0                |-1               |
+0                |-1               |-1               |-1               |1                |
 -1               |-1               |-1               |-1               |-1               |
 
 ------------------- Press ENTER to continue -----------------
@@ -60,9 +64,11 @@ Initial states : (0)
 Final states : (0)
 
 Automaton        |        a        |        b        |        c        |        d        |
-0                |0                |2                |1                |2                |
-1                |2                |1                |2                |0                |
-2                |2                |2                |2                |2                |
+0                |1                |3                |3                |3                |
+1                |3                |2                |4                |0                |
+2                |3                |3                |4                |3                |
+3                |3                |3                |3                |3                |
+4                |3                |3                |3                |0                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -82,9 +88,11 @@ Initial states : (73)
 Final states : (1)(73)
 
 Automaton        |        a        |        b        |        c        |        d        |
-0                |-                |0                |-                |1                |
-1                |1                |-                |0                |-                |
-73               |1                |-                |0                |-                |
+0                |-                |-                |-                |1                |
+1                |2,3,0            |-                |-                |-                |
+2                |-                |3                |-                |-                |
+3                |-                |-                |0                |-                |
+73               |2,3,0            |-                |-                |-                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -101,12 +109,14 @@ What do you want to do ?
 5
 ------------------- Complementary -----------------
 Initial states : (0)
-Final states : (1)(2)
+Final states : (1)(2)(3)(4)
 
 Automaton        |        a        |        b        |        c        |        d        |
-0                |0                |2                |1                |2                |
-1                |2                |1                |2                |0                |
-2                |2                |2                |2                |2                |
+0                |1                |3                |3                |3                |
+1                |3                |2                |4                |0                |
+2                |3                |3                |4                |3                |
+3                |3                |3                |3                |3                |
+4                |3                |3                |3                |0                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -123,8 +133,8 @@ What do you want to do ?
 6
 ------------------- Reading a Word -----------------
 Please type a word
-abbac
-------------------- Reading abbac -----------------
+ccd
+------------------- Reading ccd -----------------
 recognize : false
 Do you want to type another word ? (1 = Yes, 2 = No)
 2
@@ -142,8 +152,8 @@ What do you want to do ?
 7
 ------------------- Read Complementary Word -----------------
 Please type a word
-abbac
-------------------- Reading abbac -----------------
+ccd
+------------------- Reading ccd -----------------
 Recognize : true
 Do you want to type another word ? (1 = Yes, 2 = No)
 2
