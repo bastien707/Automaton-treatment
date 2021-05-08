@@ -1,0 +1,143 @@
+------------------- Welcome -----------------
+
+Please select an automaton by pressing a number between 1 to 44 : 31
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+1
+------------------- Automaton 31 selected -----------------
+Initial states : (0)
+Final states : (7)
+
+Automaton        |        a        |        b        |
+0                |-                |-                |
+1                |2                |-                |
+2                |3                |1                |
+3                |-                |3                |
+4                |-                |5                |
+5                |-                |6                |
+6                |-                |-                |
+7                |-                |-                |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+2
+We're working on asychronous automaton... please try again later.
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+3
+We're working on asychronous automaton... please try again later.
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+4
+------------------- AFS -----------------
+Initial states : (73)
+Final states : (7)
+
+Automaton        |        a        |        b        |
+0                |-                |-                |
+1                |2                |-                |
+2                |3                |1                |
+3                |-                |3                |
+4                |-                |5                |
+5                |-                |6                |
+6                |-                |-                |
+7                |-                |-                |
+73               |-                |-                |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+5
+We're working on asynchronous automaton... please try again later.
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+6
+We're working on asychronous automaton... please try again later.
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+7
+We're working on asynchronous automaton... please try again later.
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+9
+Are you sure to leave the program ? (1 = Yes, 2 = No)
+1
+
+------------------- Goodbye ! -----------------

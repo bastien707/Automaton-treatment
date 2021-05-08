@@ -1,0 +1,7 @@
+------------------- Welcome -----------------
+
+Please select an automaton by pressing a number between 1 to 44 : 32
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
+        at Automaton.Automaton.implementFs(Automaton.java:147)
+        at Automaton.Automaton.readFile(Automaton.java:935)
+        at Main.RunAutomaton.main(RunAutomaton.java:30)
