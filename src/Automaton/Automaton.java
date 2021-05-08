@@ -477,7 +477,6 @@ public class Automaton {
         //check if initial state is terminal too
         ArrayList<State> InitialStatesList = new ArrayList<>();
         InitialStatesList = AFS.getInitialStates();
-        System.out.println("liste etats initiaux:"+InitialStatesList);
         boolean emptyWord = false;
         for(int i=0; i<InitialStatesList.size();i++){
             if(InitialStatesList.get(i).getIsTerminal() == true){
@@ -485,11 +484,8 @@ public class Automaton {
             }
         }
         //Create the new initial state : I
-        System.out.println("mot vide:"+emptyWord);
-        System.out.println("liste etats AFS"+AFS.stateList);
         if(emptyWord == false){
             State StateI = new State();
-            //StateI.setIndex(this.stateList.size());
             StateI.setIndex(Character.valueOf('I'));
             StateI.setIsInitial(true);
             StateI.setItsTransitions();
@@ -498,7 +494,6 @@ public class Automaton {
         }
         else{
             State StateI = new State();
-            //StateI.setIndex(this.stateList.size());
             StateI.setIndex(Character.valueOf('I'));
             StateI.setIsInitial(true);
             StateI.setIsTerminal(true);
@@ -506,9 +501,6 @@ public class Automaton {
             AFS.stateList.add(StateI);
             AFS.stateNumber++;
         }
-        System.out.println("ftest: add I");
-        System.out.println("liste etats AFS"+AFS.stateList);
-        //for each initial states, we duplicate there transition to the new state I
 
         for(int i=0;i<InitialStatesList.size();i++){
             for(int j =0; j<InitialStatesList.get(i).getItsTransitions().size();j++){
@@ -605,6 +597,7 @@ public class Automaton {
         while(equal == 0){
             //we go through lists in theta.
             for(int i = 0; i < Theta.size(); i++){
+                //listTag is the list of partitions we get with current state list.
                 ArrayList<ArrayList<Character>> listTag = new ArrayList<>();
                 //we go through one list of theta
                 for(int j = 0; j < Theta.get(i).size(); j++){
@@ -654,7 +647,7 @@ public class Automaton {
                     }
                 }
             }
-            //now we have our new partition, let's do it again
+            //now we have our new partition, let's do it again until theta == thetaBis
             
             if(Theta.equals(ThetaBis)){
                 //we stop the process when equals, it mean that if we minimize a x times, we get the same automaton
@@ -682,7 +675,6 @@ public class Automaton {
                 minimalStateList.get(i).setIsInitial(ThetaBis.get(i).get(0).getIsInitial());
                 minimalStateList.get(i).setIsTerminal(ThetaBis.get(i).get(0).getIsTerminal());
             }
-            
             else{
                 boolean newInitial = false, newTerminal = false;
                 for(int j = 0; j < ThetaBis.get(i).size(); j++){
@@ -691,7 +683,7 @@ public class Automaton {
                         newInitial = ThetaBis.get(i).get(j).getIsInitial();
                     }
                     if(ThetaBis.get(i).get(j).getIsTerminal() == true){
-                        newTerminal= ThetaBis.get(i).get(j).getIsInitial();
+                        newTerminal= ThetaBis.get(i).get(j).getIsTerminal();
                     }
                 }
                 //we make sure we don't forget any state when there are several
@@ -722,6 +714,49 @@ public class Automaton {
             }
         }
         return this;
+    }
+
+    public void switch_complementary_language(){
+        //Check if an automaton is determinist and complete
+        if(!this.isDeterminist() || !this.isComplete()){
+            System.out.println("ERROR: this automaton must be determinist and complete");
+        }
+        else{
+            //For each states we reverse the terminal status
+            for(int i=0;i<this.stateList.size();i++){
+                if(this.stateList.get(i).getIsTerminal() == true){
+                    this.stateList.get(i).setIsTerminal(false);
+                }
+                else{
+                    this.stateList.get(i).setIsTerminal(true);
+                }
+            }   
+        }
+    }
+
+    public boolean recognize_word_automaton_determinist(String mot){
+        State actual_State = new State();
+        actual_State = this.getInitialStates().get(0);
+        int k=0;
+        int findtransition = 0;
+        do{
+            char letter= mot.charAt(k);
+            for(int i=0;i<actual_State.getItsTransitions().size();i++){
+                if(actual_State.getItsTransitions().get(i).getLetter() == letter){  
+                    actual_State = actual_State.getItsTransitions().get(i).getArrivalState();
+                    findtransition++;
+
+                    if(findtransition == mot.length() && actual_State.getIsTerminal()){
+                        return true;
+                    }
+                }
+            }
+            k++;
+        }while(k<mot.length());
+        if(findtransition == mot.length() && actual_State.getIsTerminal()){
+            return true;
+        }
+        return false;
     }
 
     // display
@@ -777,6 +812,7 @@ public class Automaton {
                 break;
         }
     }
+    
     public void colorDisplay(int i){
         int sizeOfState = String.valueOf(this.getStateList().get(i).getIndex()).length();
 
@@ -866,7 +902,6 @@ public class Automaton {
         }
         System.out.print("        |");
         System.out.println();
-
         for (int i = 0; i < this.stateList.size(); i++) { // print state by state and line by line
             this.colorDisplay(i);
             if(this.isDeterminist() == false){
