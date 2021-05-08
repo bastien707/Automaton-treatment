@@ -370,7 +370,7 @@ public abstract class RunAutomaton {
                 textfile = "text/D3-21.txt"; // depend of where we're compiling
                 break;
             case 22:
-                textfile = "text/D3-12.txt"; // depend of where we're compiling
+                textfile = "text/D3-22.txt"; // depend of where we're compiling
                 break;
             case 23:
                 textfile = "text/D3-23.txt"; // depend of where we're compiling

@@ -864,10 +864,10 @@ public class Automaton {
                 System.out.print(" ".repeat(14) + "|");
                 break;
             case 3:
-                System.out.print(" ".repeat(13) + "|");
+                System.out.print(" ".repeat(12) + "|");
                 break;
             case 4:
-                System.out.print(" ".repeat(12) + "|");
+                System.out.print(" ".repeat(10) + "|");
                 break;
             }
             count = 0;
