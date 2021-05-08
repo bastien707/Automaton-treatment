@@ -1,0 +1,189 @@
+------------------- Welcome -----------------
+
+Please select an automaton by pressing a number between 1 to 44 : 25
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+1
+------------------- Automaton 25 selected -----------------
+Initial states : (1)
+Final states : (0)
+
+Automaton        |        a        |        b        |        c        |        d        |
+0                |-                |-                |-                |-                |
+1                |1,2              |3                |4                |0                |
+2                |-                |2,3              |4                |0                |
+3                |-                |-                |3,4              |0                |
+4                |-                |-                |-                |4,0              |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+2
+------------------- AFDC -----------------
+Initial states : (1)
+Final states : (0)(40)
+
+Automaton        |        a        |        b        |        c        |        d        |
+1                |12               |3                |4                |0                |
+12               |12               |23               |4                |0                |
+3                |-1               |-1               |34               |0                |
+4                |-1               |-1               |-1               |40               |
+0                |-1               |-1               |-1               |-1               |
+23               |-1               |23               |34               |0                |
+34               |-1               |-1               |34               |40               |
+40               |-1               |-1               |-1               |40               |
+-1               |-1               |-1               |-1               |-1               |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+3
+------------------- AFDCM -----------------
+Initial states : (2)
+Final states : (0)(1)
+
+Automaton        |        a        |        b        |        c        |        d        |
+0                |8                |8                |8                |8                |
+1                |8                |8                |8                |1                |
+2                |3                |4                |6                |0                |
+3                |3                |7                |6                |0                |
+4                |8                |8                |5                |0                |
+5                |8                |8                |5                |1                |
+6                |8                |8                |8                |1                |
+7                |8                |7                |5                |0                |
+8                |8                |8                |8                |8                |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+4
+------------------- AFS -----------------
+Initial states : (73)
+Final states : (0)
+
+Automaton        |        a        |        b        |        c        |        d        |
+0                |-                |-                |-                |-                |
+1                |1,2              |3                |4                |0                |
+2                |-                |2,3              |4                |0                |
+3                |-                |-                |3,4              |0                |
+4                |-                |-                |-                |4,0              |
+73               |1,2              |3                |4                |0                |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+5
+------------------- Complementary -----------------
+Initial states : (2)
+Final states : (2)(3)(4)(5)(6)(7)(8)
+
+Automaton        |        a        |        b        |        c        |        d        |
+0                |8                |8                |8                |8                |
+1                |8                |8                |8                |1                |
+2                |3                |4                |6                |0                |
+3                |3                |7                |6                |0                |
+4                |8                |8                |5                |0                |
+5                |8                |8                |5                |1                |
+6                |8                |8                |8                |1                |
+7                |8                |7                |5                |0                |
+8                |8                |8                |8                |8                |
+
+------------------- Press ENTER to continue -----------------
+
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+6
+------------------- Reading a Word -----------------
+Please type a word
+dddd
+------------------- Reading dddd -----------------
+recognize : false
+Do you want to type another word ? (1 = Yes, 2 = No)
+2
+------------------- Press ENTER to continue -----------------
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+7
+------------------- Read Complementary Word -----------------
+Please type a word
+dddd
+------------------- Reading dddd -----------------
+Recognize : true
+Do you want to type another word ? (1 = Yes, 2 = No)
+2
+------------------- Press ENTER to continue -----------------
+What do you want to do ?
+(1) Show me AF.
+(2) Show me AFDC.
+(3) Show me AFDCM.
+(4) Show me AFS.
+(5) Show me complementary.
+(6) I want to read a word.
+(7) I want to read complementary word.
+(8) Select another automaton.
+(9) Quit.
+9
+Are you sure to leave the program ? (1 = Yes, 2 = No)
+1
+
+------------------- Goodbye ! -----------------
