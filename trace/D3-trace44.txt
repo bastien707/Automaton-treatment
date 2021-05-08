@@ -13,15 +13,14 @@ What do you want to do ?
 (9) Quit.
 1
 ------------------- Automaton 44 selected -----------------
-Initial states : (1)
-Final states : (1)
+Initial states : (0)
+Final states : (2)(3)
 
-Automaton        |        a        |        b        |        c        |
-0                |3                |1                |3                |
-1                |0                |2                |-                |
-2                |1                |-                |4,4              |
-3                |3                |3                |3                |
-4                |4                |4                |4                |
+Automaton        |        a        |        b        |
+0                |1,2              |2                |
+1                |-                |3                |
+2                |3                |2                |
+3                |3,2              |3,2              |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -36,17 +35,17 @@ What do you want to do ?
 (8) Select another automaton.
 (9) Quit.
 2
+Automaton already complete.
 ------------------- AFDC -----------------
-Initial states : (1)
-Final states : (1)
+Initial states : (0)
+Final states : (12)(2)(3)(23)
 
-Automaton        |        a        |        b        |        c        |
-1                |0                |2                |-1               |
-0                |3                |1                |3                |
-2                |1                |-1               |4                |
-3                |3                |3                |3                |
-4                |4                |4                |4                |
--1               |-1               |-1               |-1               |
+Automaton        |        a        |        b        |
+0                |12               |2                |
+12               |3                |23               |
+2                |3                |2                |
+3                |23               |23               |
+23               |23               |23               |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -61,15 +60,14 @@ What do you want to do ?
 (8) Select another automaton.
 (9) Quit.
 3
+Automaton already complete.
 ------------------- AFDCM -----------------
-Initial states : (0)
+Initial states : (1)
 Final states : (0)
 
-Automaton        |        a        |        b        |        c        |
-0                |1                |2                |3                |
-1                |3                |0                |3                |
-2                |0                |3                |3                |
-3                |3                |3                |3                |
+Automaton        |        a        |        b        |
+0                |0                |0                |
+1                |0                |0                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -86,15 +84,14 @@ What do you want to do ?
 4
 ------------------- AFS -----------------
 Initial states : (73)
-Final states : (1)(73)
+Final states : (2)(3)
 
-Automaton        |        a        |        b        |        c        |
-0                |3                |1                |3                |
-1                |0                |2                |-                |
-2                |1                |-                |4,4              |
-3                |3                |3                |3                |
-4                |4                |4                |4                |
-73               |0                |2                |-                |
+Automaton        |        a        |        b        |
+0                |1,2              |2                |
+1                |-                |3                |
+2                |3                |2                |
+3                |3,2              |3,2              |
+73               |1,2              |2                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -109,15 +106,14 @@ What do you want to do ?
 (8) Select another automaton.
 (9) Quit.
 5
+Automaton already complete.
 ------------------- Complementary -----------------
-Initial states : (0)
-Final states : (1)(2)(3)
+Initial states : (1)
+Final states : (1)
 
-Automaton        |        a        |        b        |        c        |
-0                |1                |2                |3                |
-1                |3                |0                |3                |
-2                |0                |3                |3                |
-3                |3                |3                |3                |
+Automaton        |        a        |        b        |
+0                |0                |0                |
+1                |0                |0                |
 
 ------------------- Press ENTER to continue -----------------
 
@@ -132,11 +128,12 @@ What do you want to do ?
 (8) Select another automaton.
 (9) Quit.
 6
+Automaton already complete.
 ------------------- Reading a Word -----------------
 Please type a word
-ccc
-------------------- Reading ccc -----------------
-recognize : false
+ba
+------------------- Reading ba -----------------
+recognize : true
 Do you want to type another word ? (1 = Yes, 2 = No)
 2
 ------------------- Press ENTER to continue -----------------
@@ -151,11 +148,12 @@ What do you want to do ?
 (8) Select another automaton.
 (9) Quit.
 7
+Automaton already complete.
 ------------------- Read Complementary Word -----------------
 Please type a word
-ccc
-------------------- Reading ccc -----------------
-Recognize : true
+ba
+------------------- Reading ba -----------------
+Recognize : false
 Do you want to type another word ? (1 = Yes, 2 = No)
 2
 ------------------- Press ENTER to continue -----------------
@@ -171,6 +169,7 @@ What do you want to do ?
 (9) Quit.
 9
 Are you sure to leave the program ? (1 = Yes, 2 = No)
+
 1
 
 ------------------- Goodbye ! -----------------
