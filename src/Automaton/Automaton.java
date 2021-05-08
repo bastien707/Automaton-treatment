@@ -275,7 +275,14 @@ public class Automaton {
         return AFS;
     }
 
-    public boolean recognize_word_automaton_deterministe(String mot){
+    public boolean recognize_word_automaton_determinist(String mot){
+        State actual_State = new State();
+        for(int i=0;i<this.stateList.size();i++){
+            if(this.stateList.get(i).getIsInitial() == true){
+                actual_State = this.stateList.get(i);
+            }
+        }
+        
         //etablir un etat courant <- prend etat initial
         /*do
         {
@@ -459,6 +466,7 @@ public class Automaton {
         myAutomaton.displayAutomaton();
         System.out.println("Passage Complémentaire");
         myAutomaton.switch_complementary_language();
+        myAutomaton.recognize_word_automaton_determinist("abba");
 
     }
 }
