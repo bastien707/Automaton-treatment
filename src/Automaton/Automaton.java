@@ -398,6 +398,7 @@ public class Automaton {
                         if (newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex() == 0) {
                             zeroCount++;
                         } else 
+                            //add index's arrivalState if letters match
                             index += String.valueOf(newStateList.get(0).getItsTransitions().get(j).getArrivalState().getIndex());
                     }
                 }
@@ -603,10 +604,13 @@ public class Automaton {
                 for(int j = 0; j < Theta.get(i).size(); j++){
                     ArrayList<Character> oneListTag = new ArrayList<>();
                     for(int k = 0; k < Theta.get(i).get(j).getItsTransitions().size(); k++){
+                        //browse again in the same theta.
                         for(int l = 0; l <Theta.size(); l++){
                             for(int m = 0; m < Theta.get(l).size(); m++){
                                 if(Theta.get(i).get(j).getItsTransitions().get(k).getArrivalState().getIndex() == Theta.get(l).get(m).getIndex()){
                                     String index = Integer.toString(l);
+                                    //adding one index to OnelistTag
+                                    //index correspond to one partition number like : [I] or [III]
                                     oneListTag.add(index.charAt(0)); 
                                     break;
                                 }
@@ -617,24 +621,30 @@ public class Automaton {
                     listTag.add(oneListTag);
                 }
                 // here we merge all partition of the current partition.
+                //the list of treated OneListTag
                 ArrayList<ArrayList<Character>> treated = new ArrayList<>();
 
                 for(int index = 0; index < listTag.size(); index++){
                     
                     int treatedCount = 0;
+                    //temp is a OneListTag we are treating
                     ArrayList<Character> temp = new ArrayList<>();
                     temp = listTag.get(index);
+                    //we check if temp haven't already been treated
                     for(int b = 0; b < treated.size(); b++){
                         if(treated.get(b).equals(temp)){
                             treatedCount++;
                         }
                     }
+                    //if temp haven't been treated then,
                     if(treatedCount == 0){
+                        //create selectedStates that will contain states we keep for minimizing
                         ArrayList<State> selectedStates = new ArrayList<>();
                         for(int a = 0; a < listTag.size(); a++){
                             //we pass if we are on the tag that we are comparing 
                             if(index != a){
                                 if(temp.equals(listTag.get(a))){
+                                    //creating partition of equals states only
                                     selectedStates.add(Theta.get(i).get(a));
                                 }
                             }
@@ -642,6 +652,7 @@ public class Automaton {
                                 selectedStates.add(Theta.get(i).get(a));
                             }
                         }
+                        //selectedStates are one partition now
                         ThetaBis.add(selectedStates);
                         treated.add(temp);
                     }
